@@ -6,16 +6,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User,Long> {
     User findByUsername(String username);
 
     @Query(value = "select username from users where :username is null or username like %:username%",
-            nativeQuery = true)
-    String findUserByUsername(@Param("username") String username);
+    nativeQuery = true)
+    String findUserByUsername(@Param("username")String username);
 
     @Query(value = "select email from users where :email is null or email like %:email%",
-            nativeQuery = true)
-    String findEmailbyIncomingEmail(@Param("email") String email);
+    nativeQuery = true)
+    String findEmailbyIncomingEmail(@Param("email")String email);
 
     boolean existsUserByName(String username);
+
+
+
+
 }

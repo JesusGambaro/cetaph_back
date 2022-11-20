@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,18 +53,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User saveUser(User user) {
-        crearRoles();
         Rol rol = rolRepository.findByName("User");
+        rol = rolRepository.findByName("User");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(rol);
         return userRepository.save(user);
     }
+
     @Override
-    public User saveAdminUser(User user) {
-        Rol rol = rolRepository.findByName("Admin");
+    public void saveAdminUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(rol);
-        return userRepository.save(user);
+        List<Rol> roles = new ArrayList<>();
+        roles.add(rolRepository.findByName("Admin"));
+        user.setRoles(roles);
+        userRepository.save(user);
     }
 
     @Override
@@ -111,6 +114,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    @Override
     public void crearRoles() {
         String[] rolesName = new String[]{"Admin", "User", "Empleado"};
         for (String s : rolesName) {
@@ -125,4 +129,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.existsUserByName(username);
     }
 }
+
 

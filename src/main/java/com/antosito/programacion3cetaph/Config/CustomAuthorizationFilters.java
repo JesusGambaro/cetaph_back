@@ -36,12 +36,13 @@ public class CustomAuthorizationFilters extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/api/v1/login")||request.getServletPath().equals("/api/v1/token/refresh/**")){
+        if(request.getServletPath().equals("/api/login")||request.getServletPath().equals("/api/v1/token/refresh/**")){
             filterChain.doFilter(request,response);
         }else{
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
                try {
+                   String origin = "http://localhost:3000";
                    String token = authorizationHeader.substring("Bearer ".length());
                    Algorithm algorithm = Algorithm.HMAC256("cetaphweb".getBytes());
                    JWTVerifier verifier = JWT.require(algorithm).build();

@@ -9,9 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface UserService {
     User saveUser(User user) throws Exception;
-    User saveAdminUser(User user) throws Exception;
 
-    void crearRoles();
     Rol saveRol(Rol rol);
     void addRolToUser(String username, String rolName);
     User getUser(String username);
@@ -19,6 +17,9 @@ public interface UserService {
     boolean validate(User user);
     boolean comprobateROl(Rol rol);
     boolean existsByName (String rolname);
-    boolean existsByUsername(String username);
 
+    void saveAdminUser(User user);
+    void crearRoles();
+
+    boolean existsByUsername(String username);
 }

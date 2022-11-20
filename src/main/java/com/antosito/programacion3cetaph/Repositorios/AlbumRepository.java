@@ -14,8 +14,7 @@ import java.util.List;
 public interface AlbumRepository extends BaseRepository<Albums, Long> {
 
     //Una query que filtra por varios parametros para encontrar un producto especifico en la base de datos
-    @Query(value = "SELECT Max(alb.id) as id, alb.nombre, alb.es_explicito, alb.lanzamiento, alb.precio,alb.descripcion,alb.duracion,alb.formato,alb.stock,alb.genero_id " +
-            " from albums alb " +
+    @Query(value = "SELECT alb.id from albums alb " +
             "inner join genero g on alb.genero_id = g.id " +
             "left join albums_singles `as` on `as`.albums_id = alb.id " +
             "left join singles s on `as`.singles_id = s.id " +
@@ -28,10 +27,9 @@ public interface AlbumRepository extends BaseRepository<Albums, Long> {
             "and (alb.precio <= :fPrecioMax or :fPrecioMax is null) " +
             "and (alb.formato LIKE concat('%', :fFormato, '%') or :fFormato is null) " +
             "and (g.genero LIKE concat('%', :fGenero, '%') or :fGenero is null) " +
-            "and (alb.es_explicito = :fExplicito or :fExplicito is null) "
-            + "group by alb.id"
-            ,
-            countQuery = "SELECT count(alb.id) from albums alb " +
+            "and (alb.es_explicito = :fExplicito or :fExplicito is null) " +
+            "group by alb.id",
+            countQuery = "SELECT count(*) from albums alb " +
                     "inner join genero g on alb.genero_id = g.id " +
                     "left join albums_singles `as` on `as`.albums_id = alb.id " +
                     "left join singles s on `as`.singles_id = s.id " +
@@ -44,9 +42,8 @@ public interface AlbumRepository extends BaseRepository<Albums, Long> {
                     "and (alb.precio <= :fPrecioMax or :fPrecioMax is null) " +
                     "and (alb.formato LIKE concat('%', :fFormato, '%') or :fFormato is null) " +
                     "and (g.genero LIKE concat('%', :fGenero, '%') or :fGenero is null) " +
-                    "and (alb.es_explicito = :fExplicito or :fExplicito is null) "
-                    + "group by alb.id"
-            ,
+                    "and (alb.es_explicito = :fExplicito or :fExplicito is null) " +
+                    "group by alb.id",
             nativeQuery = true)
     Page<Albums> SearchAlbum(@Param("fTexto") String fTexto,
                              @Param("fPrecioMin") Float fPrecioMin,
@@ -56,6 +53,8 @@ public interface AlbumRepository extends BaseRepository<Albums, Long> {
                              @Param("fGenero") String fGenero,
                              Pageable pageable
     );
+
+
 
     @Query(value = "SELECT * FROM albums a " +
             "INNER JOIN albums_artistas  aa on a.id = aa.albums_id " +
