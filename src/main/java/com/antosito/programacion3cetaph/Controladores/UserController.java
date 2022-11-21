@@ -121,13 +121,20 @@ public class UserController {
     }
 
     @GetMapping("/verify")
-    public String[] verificar(@RequestParam("token") String token) {
+    public Map verificar(@RequestParam("token") String token) {
         Algorithm algorithm = Algorithm.HMAC256("cetaphweb".getBytes());
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);
-        return decodedJWT.getClaim("rol").asArray(String.class);
+        Map<String, String> data = new HashMap<>();
+        String rol = decodedJWT.getClaim("rol").toString()
+                .replace("[", "")
+                .replace("\"", "")
+                .replace("]","")
+                .replace("\\", "");
+        data.put("username", decodedJWT.getSubject());
+        data.put("rol", rol);
+        return data;
     }
-
 }
 
 @Data
